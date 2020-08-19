@@ -6,6 +6,7 @@ import com.example.umeshfirstproject.crudapi.model.response.ResponseDto;
 import com.example.umeshfirstproject.crudapi.service.InvoiceCrudService;
 import com.example.umeshfirstproject.crudapi.utils.Validation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +22,16 @@ public class InvoiceController {
 
     private final Validation validation;
 
+    @Autowired
+    private ResponseDto responseDto1;
     @GetMapping(value = "/invoice", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDto> fetchInvoice(@RequestParam("user_id") String userId) throws Exception {
         if (StringUtils.isEmpty(userId)) {
-            var responseDto =
-                    ResponseDto.builder()
-                            .status(HttpStatus.NOT_FOUND.value())
-                            .data(null)
-                            .message("failure")
-                            .error("Invalid User ID : Cannot be fetched")
-                            .build();
+
+
+             ResponseDto responseDto = responseDto1.setResponse(HttpStatus.NOT_FOUND.value(), null, "failure", "Invalid User ID : Cannot be fetched");
+
+
             return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
         }
         InvoiceCrudResponse response;
@@ -40,25 +41,33 @@ public class InvoiceController {
 
         catch(Exception e)
         {
-            var responseDto =
-                    ResponseDto.builder()
-                            .status(HttpStatus.NOT_FOUND.value())
-                            .data(null)
-                            .message("failure")
-                            .error("Invalid User ID : Cannot be fetched")
-                            .build();
+            ResponseDto responseDto = responseDto1.setResponse(HttpStatus.NOT_FOUND.value(), null, "failure", "Invalid User ID : Cannot be fetched");
+
 
             return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
+
+////            var responseDto =
+////                    ResponseDto.builder()
+////                            .status(HttpStatus.NOT_FOUND.value())
+////                            .data(null)
+////                            .message("failure")
+////                            .error("Invalid User ID : Cannot be fetched")
+////                            .build();
+//
+//            return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
         }
 
-        var responseDto =
-                ResponseDto.builder()
-                        .status(HttpStatus.OK.value())
-                        .data(response)
-                        .message("success")
-                        .build();
+        ResponseDto responseDto = responseDto1.setResponse(HttpStatus.OK.value(), response, "Success", "No Error");
 
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
+//        var responseDto =
+//                ResponseDto.builder()
+//                        .status(HttpStatus.OK.value())
+//                        .data(response)
+//                        .message("success")
+//                        .build();
+//
+//        return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
 
 
     }
@@ -73,25 +82,32 @@ public class InvoiceController {
 //        Matcher matcher = pattern.matcher(invoiceInfo.getMobileNo());
 
         if(! validation.validateMobileNo(invoiceRequestDto.getMobileNo())) {
-            var responseDto =
-                    ResponseDto.builder()
-                            .status(HttpStatus.NOT_FOUND.value())
-                            .data(null)
-                            .error("Invalid Mobile Number Entered")
-                            .build();
+
+            ResponseDto responseDto = responseDto1.setResponse(HttpStatus.NOT_FOUND.value(), null, "failure", "Invalid Mobile Number Entered");
 
             return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
+//            var responseDto =
+//                    ResponseDto.builder()
+//                            .status(HttpStatus.NOT_FOUND.value())
+//                            .data(null)
+//                            .error("Invalid Mobile Number Entered")
+//                            .build();
+//
+//            return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
         }
         var response = invoiceCrudService.createInvoicing(invoiceRequestDto);
 
-        var responseDto =
-                ResponseDto.builder()
-                        .status(HttpStatus.OK.value())
-                        .data(response)
-                        .message("success")
-                        .build();
+        ResponseDto responseDto = responseDto1.setResponse(HttpStatus.OK.value(), response, "Success", "No Error");
 
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
+//        var responseDto =
+//                ResponseDto.builder()
+//                        .status(HttpStatus.OK.value())
+//                        .data(response)
+//                        .message("success")
+//                        .build();
+//
+//        return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
     }
 
     @PutMapping(value = "/invoice",
@@ -104,25 +120,32 @@ public class InvoiceController {
 //        Matcher matcher = pattern.matcher(invoiceInfo.getMobileNo());
 
         if(! validation.validateMobileNo(invoiceRequestDto.getMobileNo())) {
-            var responseDto =
-                    ResponseDto.builder()
-                            .status(HttpStatus.NOT_FOUND.value())
-                            .data(null)
-                            .error("Invalid Mobile Number Entered")
-                            .build();
+
+            ResponseDto responseDto = responseDto1.setResponse(HttpStatus.NOT_FOUND.value(), null, "failure", "Invalid Mobile Number Entered");
 
             return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
+//            var responseDto =
+//                    ResponseDto.builder()
+//                            .status(HttpStatus.NOT_FOUND.value())
+//                            .data(null)
+//                            .error("Invalid Mobile Number Entered")
+//                            .build();
+//
+//            return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
         }
         var response = invoiceCrudService.updateInvoiceInfo(userId, invoiceRequestDto);
 
-        var responseDto =
-                ResponseDto.builder()
-                        .status(HttpStatus.OK.value())
-                        .data(response)
-                        .message("success")
-                        .build();
+        ResponseDto responseDto = responseDto1.setResponse(HttpStatus.OK.value(), response, "success", "No Error");
 
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
+//        var responseDto =
+//                ResponseDto.builder()
+//                        .status(HttpStatus.OK.value())
+//                        .data(response)
+//                        .message("success")
+//                        .build();
+//
+//        return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
     }
 
     @DeleteMapping(value = "/invoice",
@@ -133,26 +156,32 @@ public class InvoiceController {
         }
 
         catch(Exception e){
-            var responseDto =
-                    ResponseDto.builder()
-                            .status(HttpStatus.NOT_FOUND.value())
-                            .data(null)
-                            .message("failure")
-                            .error("Invalid User ID : Cannot be deleted")
-                            .build();
+
+            ResponseDto responseDto = responseDto1.setResponse(HttpStatus.NOT_FOUND.value(), null, "failure", "Invalid User ID : Cannot be deleted");
 
             return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
+//            var responseDto =
+//                    ResponseDto.builder()
+//                            .status(HttpStatus.NOT_FOUND.value())
+//                            .data(null)
+//                            .message("failure")
+//                            .error("Invalid User ID : Cannot be deleted")
+//                            .build();
+//
+//            return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
         }
 
-
-        var responseDto =
-                ResponseDto.builder()
-                        .status(HttpStatus.OK.value())
-                        .data(null)
-                        .message("success")
-                        .build();
+        ResponseDto responseDto = responseDto1.setResponse(HttpStatus.OK.value(), null, "success", "No Error");
 
         return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
+//        var responseDto =
+//                ResponseDto.builder()
+//                        .status(HttpStatus.OK.value())
+//                        .data(null)
+//                        .message("success")
+//                        .build();
+//
+//        return ResponseEntity.status(responseDto.getStatus()).body(responseDto);
     }
 
 
